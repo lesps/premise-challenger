@@ -1,0 +1,132 @@
+/* ============================================================
+   CSS Custom Properties — Dark Palette
+   ============================================================ */
+:root {
+  --bg-primary: #0f0f0f;
+  --bg-surface: #1a1a1a;
+  --bg-elevated: #242424;
+  --text-primary: #e8e4de;
+  --text-secondary: #8a8580;
+  --text-tertiary: #5a5652;
+  --accent: #c9a84c;
+  --accent-muted: #8a7535;
+  --status-confirmed: #5c9a6e;
+  --status-revised: #c9a84c;
+  --status-suspended: #9a7a5c;
+  --status-untested: #5a5652;
+  --border: #2a2a2a;
+  --danger: #9a5c5c;
+  --focus-ring: rgba(201, 168, 76, 0.4);
+
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Source Sans 3', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --max-width: 680px;
+  --padding-mobile: 20px;
+  --padding-desktop: 40px;
+  --transition: 150ms ease;
+}
+
+/* ============================================================
+   Reset
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================================
+   Typography
+   ============================================================ */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+p {
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   Focus Visible
+   ============================================================ */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Selection
+   ============================================================ */
+::selection {
+  background-color: var(--accent-muted);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   Scrollbar (Webkit)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
