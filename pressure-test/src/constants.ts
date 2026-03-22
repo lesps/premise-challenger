@@ -2,6 +2,8 @@ import type { PropositionStatus } from './types';
 
 export const STORAGE_KEY = 'pressure-test-propositions';
 
+// Matched case-insensitively. Single words use \b word boundaries; multi-word phrases
+// use space/start/end anchors (word boundaries don't span spaces). See validation.ts.
 export const HEDGE_WORDS: string[] = [
   'maybe',
   'probably',

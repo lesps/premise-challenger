@@ -7,13 +7,17 @@ export interface Proposition {
   created_at: string;
   updated_at: string;
   claim: string;
+  // 'pressure_test' → user chose to examine the claim; 'confirmed_intuition' → user skipped to act on it directly
   triage: TriageResult | null;
   evidence: string | null;
   steelman: string | null;
   falsifiability: string | null;
   status: PropositionStatus;
+  // Populated when status is 'revised': stores the restated claim text
   revision_note: string | null;
+  // Populated when status is 'suspended': stores the reason for suspension
   resolution_note: string | null;
+  // ID of the proposition this was revised from; creates a linked chain of refinements
   revised_from: string | null;
 }
 
