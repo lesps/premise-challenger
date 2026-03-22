@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { usePropositions } from '../hooks/usePropositions';
 import { ProgressIndicator } from '../components/ProgressIndicator';
 import { HelperPrompt } from '../components/HelperPrompt';
 import { AutoGrowTextarea } from '../components/AutoGrowTextarea';
+import * as storage from '../services/storage';
 
 type Step = 1 | 2 | 3;
 
@@ -51,6 +52,18 @@ export function PressureTest() {
   const [step, setStep] = useState<Step>(1);
   const [answers, setAnswers] = useState({ evidence: '', steelman: '', falsifiability: '' });
 
+  // Refs so the unmount cleanup can access latest values without stale closure
+  const answersRef = useRef(answers);
+  const stepRef = useRef(step);
+
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
+  useEffect(() => {
+    stepRef.current = step;
+  }, [step]);
+
   useEffect(() => {
     if (!proposition) {
       navigate('/', { replace: true });
@@ -61,7 +74,24 @@ export function PressureTest() {
       steelman: proposition.steelman ?? '',
       falsifiability: proposition.falsifiability ?? '',
     });
-  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Save current step answer on unmount (e.g. browser back button)
+  useEffect(() => {
+    return () => {
+      if (!id) return;
+      const currentStep = stepRef.current;
+      const field = STEPS[currentStep].field;
+      const value = answersRef.current[field];
+      if (value.trim()) {
+        try {
+          storage.updateProposition(id, { [field]: value });
+        } catch {
+          // Silently ignore errors on unmount (component is leaving)
+        }
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!proposition) return null;
 
@@ -164,12 +194,17 @@ export function PressureTest() {
         aria-label={config.heading}
       />
 
-      {/* Navigation */}
+      {/* Sticky navigation */}
       <div
         style={{
+          position: 'sticky',
+          bottom: 0,
+          background: 'var(--bg-primary)',
+          paddingTop: '16px',
+          paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
+          marginTop: '20px',
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '20px',
           gap: '12px',
         }}
       >
@@ -208,6 +243,7 @@ export function PressureTest() {
               fontSize: '0.95rem',
               fontWeight: 600,
               cursor: canAdvance ? 'pointer' : 'not-allowed',
+              opacity: canAdvance ? 1 : 0.5,
               minHeight: '48px',
               transition: 'background var(--transition)',
             }}
@@ -228,6 +264,7 @@ export function PressureTest() {
               fontSize: '0.95rem',
               fontWeight: 600,
               cursor: canAdvance ? 'pointer' : 'not-allowed',
+              opacity: canAdvance ? 1 : 0.5,
               minHeight: '48px',
               transition: 'background var(--transition)',
             }}

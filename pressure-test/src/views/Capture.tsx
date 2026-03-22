@@ -8,17 +8,25 @@ export function Capture() {
   const navigate = useNavigate();
   const { createProposition } = usePropositions();
   const [claim, setClaim] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const hedgeWords = claim.trim() ? detectHedgeWords(claim) : [];
   const validation = isValidClaim(claim);
-  const canSubmit = validation.valid;
+  const canSubmit = validation.valid && !submitting;
 
   const handleSubmit = useCallback(
     (e?: React.FormEvent) => {
       e?.preventDefault();
       if (!canSubmit) return;
-      const p = createProposition(claim.trim());
-      navigate(`/triage/${p.id}`);
+      setSubmitting(true);
+      try {
+        const p = createProposition(claim.trim());
+        navigate(`/triage/${p.id}`);
+      } catch {
+        // Storage error (e.g. quota exceeded) is surfaced via the StorageContext banner.
+        // Re-enable submit so the user can try again or export data.
+        setSubmitting(false);
+      }
     },
     [canSubmit, claim, createProposition, navigate]
   );
@@ -104,6 +112,7 @@ export function Capture() {
             fontSize: '1rem',
             fontWeight: 600,
             cursor: canSubmit ? 'pointer' : 'not-allowed',
+            opacity: canSubmit ? 1 : 0.5,
             minHeight: '48px',
             transition: 'background var(--transition), color var(--transition)',
           }}

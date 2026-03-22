@@ -2,28 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Proposition } from '../types';
 import { StatusBadge } from './StatusBadge';
-
-function formatRelativeDate(isoString: string): string {
-  const now = Date.now();
-  const then = new Date(isoString).getTime();
-  const diff = now - then;
-
-  const minutes = Math.floor(diff / 60_000);
-  if (minutes < 1) return 'just now';
-  if (minutes < 60) return `${minutes}m ago`;
-
-  const hours = Math.floor(diff / 3_600_000);
-  if (hours < 24) return `${hours}h ago`;
-
-  const days = Math.floor(diff / 86_400_000);
-  if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
-
-  const weeks = Math.floor(days / 7);
-  if (weeks < 5) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-
-  const months = Math.floor(days / 30);
-  return `${months} month${months > 1 ? 's' : ''} ago`;
-}
+import { relativeDate } from '../utils/date';
 
 function getDestination(p: Proposition): string {
   if (p.status === 'untested' && p.triage === null) return `/triage/${p.id}`;
@@ -107,9 +86,9 @@ export function PropositionCard({ proposition, onDelete }: PropositionCardProps)
               border: 'none',
               cursor: 'pointer',
               color: 'var(--text-tertiary)',
-              padding: '4px',
-              minHeight: '32px',
-              minWidth: '32px',
+              padding: '6px',
+              minHeight: '44px',
+              minWidth: '44px',
               borderRadius: '4px',
               display: 'flex',
               alignItems: 'center',
@@ -142,7 +121,7 @@ export function PropositionCard({ proposition, onDelete }: PropositionCardProps)
                 padding: '3px 8px',
                 fontSize: '0.8rem',
                 cursor: 'pointer',
-                minHeight: '28px',
+                minHeight: '44px',
               }}
             >
               Yes
@@ -159,7 +138,7 @@ export function PropositionCard({ proposition, onDelete }: PropositionCardProps)
                 padding: '3px 8px',
                 fontSize: '0.8rem',
                 cursor: 'pointer',
-                minHeight: '28px',
+                minHeight: '44px',
               }}
             >
               No
@@ -192,11 +171,9 @@ export function PropositionCard({ proposition, onDelete }: PropositionCardProps)
             color: 'var(--text-tertiary)',
           }}
         >
-          {formatRelativeDate(proposition.created_at)}
+          {relativeDate(proposition.created_at)}
         </span>
       </div>
     </div>
   );
 }
-
-export { formatRelativeDate };

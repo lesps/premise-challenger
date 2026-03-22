@@ -130,3 +130,51 @@ p {
   background: var(--border);
   border-radius: 3px;
 }
+
+/* ============================================================
+   Layout Root — viewport height with dvh fallback
+   ============================================================ */
+.layout-root {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  min-height: 100vh;
+  /* Modern browsers: dynamic viewport height accounts for mobile browser chrome */
+  min-height: 100dvh;
+}
+
+/* ============================================================
+   Mobile: hide desktop header nav, show bottom nav
+   ============================================================ */
+@media (min-width: 600px) {
+  .bottom-nav {
+    display: none !important;
+  }
+}
+
+@media (max-width: 599px) {
+  .bottom-nav {
+    display: flex !important;
+  }
+}
+
+/* ============================================================
+   Transitions & Interactions
+   ============================================================ */
+button {
+  transition: opacity var(--transition), background-color var(--transition), border-color var(--transition);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Card hover */
+[role="button"] {
+  transition: background var(--transition), border-color var(--transition);
+}
+
+[role="button"]:hover {
+  background: var(--bg-elevated) !important;
+}

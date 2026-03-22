@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import type { Proposition, FilterOptions, ExportOptions } from '../types';
 import * as storage from '../services/storage';
 import { generateExport, downloadExport } from '../utils/export';
+import { StorageContext } from '../context/StorageContext';
 
 export interface UsePropositionsReturn {
   propositions: Proposition[];
@@ -16,6 +17,8 @@ export interface UsePropositionsReturn {
 }
 
 export function usePropositions(): UsePropositionsReturn {
+  const { setQuotaExceeded } = useContext(StorageContext);
+
   const [propositions, setPropositions] = useState<Proposition[]>(() =>
     storage.loadPropositions()
   );
@@ -37,25 +40,52 @@ export function usePropositions(): UsePropositionsReturn {
     return results;
   }, [propositions, filters]);
 
-  const createProposition = useCallback((claim: string): Proposition => {
-    const p = storage.createProposition(claim);
-    setPropositions(storage.loadPropositions());
-    return p;
-  }, []);
+  const handleStorageError = useCallback(
+    (e: unknown) => {
+      if (e instanceof Error && e.message === 'QUOTA_EXCEEDED') {
+        setQuotaExceeded(true);
+        return;
+      }
+      throw e;
+    },
+    [setQuotaExceeded]
+  );
+
+  const createProposition = useCallback(
+    (claim: string): Proposition => {
+      try {
+        const p = storage.createProposition(claim);
+        setPropositions(storage.loadPropositions());
+        return p;
+      } catch (e) {
+        handleStorageError(e);
+        throw e;
+      }
+    },
+    [handleStorageError]
+  );
 
   const updateProposition = useCallback(
     (id: string, updates: Partial<Proposition>): Proposition => {
-      const p = storage.updateProposition(id, updates);
+      try {
+        const p = storage.updateProposition(id, updates);
+        setPropositions(storage.loadPropositions());
+        return p;
+      } catch (e) {
+        handleStorageError(e);
+        throw e;
+      }
+    },
+    [handleStorageError]
+  );
+
+  const deleteProposition = useCallback(
+    (id: string): void => {
+      storage.deleteProposition(id);
       setPropositions(storage.loadPropositions());
-      return p;
     },
     []
   );
-
-  const deleteProposition = useCallback((id: string): void => {
-    storage.deleteProposition(id);
-    setPropositions(storage.loadPropositions());
-  }, []);
 
   const getProposition = useCallback((id: string): Proposition | null => {
     return storage.getProposition(id);

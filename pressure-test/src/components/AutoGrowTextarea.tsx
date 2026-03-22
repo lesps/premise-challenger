@@ -4,7 +4,7 @@ interface AutoGrowTextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextArea
   value: string;
 }
 
-export function AutoGrowTextarea({ value, ...props }: AutoGrowTextareaProps) {
+export function AutoGrowTextarea({ value, onFocus, ...props }: AutoGrowTextareaProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -15,11 +15,23 @@ export function AutoGrowTextarea({ value, ...props }: AutoGrowTextareaProps) {
     }
   }, [value]);
 
+  const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    // Scroll input into view above keyboard on mobile (after keyboard appears)
+    const target = e.target;
+    setTimeout(() => {
+      if (typeof target.scrollIntoView === 'function') {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 300);
+    onFocus?.(e);
+  };
+
   return (
     <textarea
       ref={ref}
       value={value}
       rows={1}
+      onFocus={handleFocus}
       style={{
         width: '100%',
         minHeight: '120px',

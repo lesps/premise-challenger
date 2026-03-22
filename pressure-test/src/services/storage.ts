@@ -1,8 +1,15 @@
 import type { Proposition, FilterOptions } from '../types';
 import { STORAGE_KEY } from '../constants';
 import { generateId } from '../utils/id';
+import { isLocalStorageAvailable } from '../utils/storageCheck';
+
+const STORAGE_AVAILABLE = isLocalStorageAvailable();
+let memoryStore: Proposition[] = [];
 
 export function loadPropositions(): Proposition[] {
+  if (!STORAGE_AVAILABLE) {
+    return memoryStore;
+  }
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
@@ -16,7 +23,23 @@ export function loadPropositions(): Proposition[] {
 }
 
 export function savePropositions(propositions: Proposition[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(propositions));
+  if (!STORAGE_AVAILABLE) {
+    memoryStore = propositions;
+    return;
+  }
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(propositions));
+  } catch (e) {
+    const isQuota =
+      e instanceof DOMException &&
+      (e.name === 'QuotaExceededError' ||
+        e.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+        e.code === 22);
+    if (isQuota) {
+      throw new Error('QUOTA_EXCEEDED');
+    }
+    throw e;
+  }
 }
 
 export function createProposition(claim: string): Proposition {

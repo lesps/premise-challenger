@@ -251,6 +251,7 @@ export function Outcome() {
             {/* Confirmed */}
             <button
               type="button"
+              aria-label="Confirmed"
               onClick={() => setChoice(choice === 'confirmed' ? null : 'confirmed')}
               style={{
                 background: choice === 'confirmed' ? 'var(--bg-elevated)' : 'var(--bg-surface)',
@@ -274,6 +275,7 @@ export function Outcome() {
             {/* Revised */}
             <button
               type="button"
+              aria-label="Revised"
               onClick={() => setChoice(choice === 'revised' ? null : 'revised')}
               style={{
                 background: choice === 'revised' ? 'var(--bg-elevated)' : 'var(--bg-surface)',
@@ -297,6 +299,7 @@ export function Outcome() {
             {/* Suspended */}
             <button
               type="button"
+              aria-label="Suspended"
               onClick={() => setChoice(choice === 'suspended' ? null : 'suspended')}
               style={{
                 background: choice === 'suspended' ? 'var(--bg-elevated)' : 'var(--bg-surface)',

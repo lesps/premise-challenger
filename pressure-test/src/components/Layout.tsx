@@ -3,9 +3,10 @@ import { NavLink } from 'react-router-dom';
 
 interface LayoutProps {
   children: ReactNode;
+  banner?: ReactNode;
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, banner }: LayoutProps) {
   const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
     color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
     fontFamily: 'var(--font-sans)' as const,
@@ -18,14 +19,10 @@ export function Layout({ children }: LayoutProps) {
   });
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'var(--bg-primary)',
-      }}
-    >
+    <div className="layout-root">
+      {/* Storage banners (above header) */}
+      {banner}
+
       {/* Desktop header — hidden on mobile */}
       <header
         style={{
@@ -82,7 +79,7 @@ export function Layout({ children }: LayoutProps) {
         {children}
       </main>
 
-      {/* Bottom nav — mobile only via media query simulation */}
+      {/* Bottom nav — mobile only via media query */}
       <nav
         aria-label="Mobile navigation"
         style={{
@@ -94,7 +91,7 @@ export function Layout({ children }: LayoutProps) {
           background: 'var(--bg-primary)',
           display: 'flex',
           justifyContent: 'space-around',
-          padding: '8px 0 calc(8px + env(safe-area-inset-bottom))',
+          padding: '8px 0 calc(8px + env(safe-area-inset-bottom, 0px))',
           zIndex: 100,
         }}
         className="bottom-nav"
