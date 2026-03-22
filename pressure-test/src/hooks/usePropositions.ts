@@ -25,6 +25,8 @@ export function usePropositions(): UsePropositionsReturn {
     setPropositions(storage.loadPropositions());
   }, []);
 
+  // Filtering and sorting happen in-memory against the propositions array.
+  // Recomputes only when propositions or filters change — avoids redundant re-sorts on unrelated renders.
   const filteredPropositions = useMemo(() => {
     const { status = 'all', sortField = 'updated_at', sortDirection = 'desc' } = filters;
     let results = status !== 'all' ? propositions.filter((p) => p.status === status) : propositions;
@@ -37,6 +39,9 @@ export function usePropositions(): UsePropositionsReturn {
     return results;
   }, [propositions, filters]);
 
+  // Each mutation writes to localStorage via the storage service, then reloads the full
+  // array back into React state. This keeps state authoritative from storage rather than
+  // applying optimistic updates, which simplifies correctness across concurrent hook instances.
   const createProposition = useCallback((claim: string): Proposition => {
     const p = storage.createProposition(claim);
     setPropositions(storage.loadPropositions());

@@ -11,7 +11,11 @@ export function detectHedgeWords(claim: string): string[] {
   const found: string[] = [];
   for (const phrase of HEDGE_WORDS) {
     const escaped = escapeRegex(phrase);
-    // Use word boundaries for single words; space/start/end anchors for multi-word phrases
+    // Single words use \b word boundaries (e.g. "might" won't match "mighty").
+    // Multi-word phrases (e.g. "i think") can't use \b across spaces, so we anchor
+    // on whitespace or string start/end instead. This means "i think" is caught at
+    // sentence start or between words but not if immediately surrounded by punctuation —
+    // an acceptable edge case given the informal nature of claim text.
     const pattern = phrase.includes(' ')
       ? `(?:^|\\s)${escaped}(?:\\s|$)`
       : `\\b${escaped}\\b`;

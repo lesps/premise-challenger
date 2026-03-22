@@ -2,6 +2,9 @@ import type { Proposition, FilterOptions } from '../types';
 import { STORAGE_KEY } from '../constants';
 import { generateId } from '../utils/id';
 
+// All propositions are stored as a single JSON array under one localStorage key.
+// On parse error (corrupted data) or non-array shape, returns [] rather than throwing —
+// the app degrades to an empty state rather than crashing.
 export function loadPropositions(): Proposition[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -15,6 +18,8 @@ export function loadPropositions(): Proposition[] {
   }
 }
 
+// Quota exceeded errors (e.g. private browsing with low limits) are NOT caught here —
+// they propagate to the caller so the UI can surface a warning banner.
 export function savePropositions(propositions: Proposition[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(propositions));
 }
