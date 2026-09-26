@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.0] - 2026-09-26
+
+### Added
+- Logical fallacies activity (`/fallacies`): library of 30 fallacies across five categories (relevance, presumption, causal, ambiguity, formal), each with definition, aliases, example, and explanation of the flaw. Category filter and text search.
+- Fallacy quiz (`/fallacies/quiz`): 10 multiple-choice questions drawn from scenarios separate from the library examples, with immediate feedback, final score, and review of missed questions.
+- `utils/quiz.ts` (quiz generation, shuffling, scoring) and `utils/fallacies.ts` (filtering), with unit tests.
+- "Fallacies" link in header and bottom navigation.
+
+### Fixed
+- Header nav and bottom nav both rendered at every width despite being documented as desktop-only / mobile-only. Added the missing responsive CSS (breakpoint 640px).
+
 ## [1.0.0] - 2026-03-22
 
 ### Added

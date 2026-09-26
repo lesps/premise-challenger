@@ -48,4 +48,19 @@ describe('Layout', () => {
     );
     expect(activeLink).toBeTruthy();
   });
+
+  it('renders Fallacies links', () => {
+    renderLayout();
+    const links = screen.getAllByRole('link', { name: /fallacies/i });
+    expect(links.length).toBe(2);
+    links.forEach((l) => expect(l).toHaveAttribute('href', '/fallacies'));
+  });
+
+  it('Fallacies link stays active on the quiz route', () => {
+    renderLayout('/fallacies/quiz');
+    const activeLink = screen
+      .getAllByRole('link', { name: /fallacies/i })
+      .find((l) => (l as HTMLElement).style.color === 'var(--accent)');
+    expect(activeLink).toBeTruthy();
+  });
 });

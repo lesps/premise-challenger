@@ -4,6 +4,8 @@
 
 Proposition Pressure-Test Tool — a mobile-first SPA for structured critical thinking. No backend, no auth, browser localStorage only.
 
+Two activities: the proposition pressure-test flow, and a logical fallacies library with a multiple-choice quiz.
+
 ## Stack
 
 - React 18 + TypeScript (strict)
@@ -32,11 +34,15 @@ npm run preview      # Serve production build locally
 src/
 ├── types.ts              # All TypeScript interfaces — single source of truth
 ├── constants.ts          # Hedge words, status metadata, storage key
+├── data/
+│   └── fallacies.ts      # Static fallacy library: definitions, examples, quiz scenarios, categories
 ├── services/
 │   └── storage.ts        # localStorage CRUD — only file that touches localStorage
 ├── utils/
 │   ├── validation.ts     # Hedge word detection, claim validation
 │   ├── export.ts         # JSON export/download
+│   ├── fallacies.ts      # Fallacy library filtering (category + text search)
+│   ├── quiz.ts           # Quiz generation, shuffling (injectable RNG), scoring
 │   └── id.ts             # UUID generation (crypto.randomUUID with fallback)
 ├── hooks/
 │   └── usePropositions.ts  # Main data hook — wraps storage service, provides reactive state
@@ -55,6 +61,7 @@ src/
 - **Business logic lives in `utils/` and `services/`.** Views and components are presentation only.
 - **`usePropositions` hook** is the single interface between React state and the storage layer. All mutations go through it.
 - **HashRouter** for offline/static hosting compatibility. All routes are `/#/path`.
+- **Fallacy content is static data** in `data/fallacies.ts`, not persisted. The quiz is stateless — nothing is written to localStorage. Each fallacy's `quizScenarios` must differ from its library `example` (enforced by `data/fallacies.test.ts`).
 - **Tests co-located** with source files (no separate `__tests__` directory). Test files use `*.test.ts` / `*.test.tsx`.
 
 ### Routes
@@ -67,6 +74,8 @@ src/
 | `/test/:id` | PressureTest | 3-step evidence/steelman/falsifiability flow |
 | `/outcome/:id` | Outcome | Decision (confirm/revise/suspend) and review |
 | `/open-questions` | OpenQuestions | All suspended propositions |
+| `/fallacies` | Fallacies | Fallacy library with category filter, search, expandable examples |
+| `/fallacies/quiz` | FallacyQuiz | 10-question multiple-choice quiz with per-question feedback and missed-question review |
 | `*` | — | Redirects to `/` |
 
 ### Data model
@@ -85,12 +94,14 @@ Key fields:
 - Color palette: near-black bg, warm off-white text, gold accent. Status colors: sage (confirmed), gold (revised), brown (suspended), gray (untested).
 - Typography: Newsreader (serif) for headings/claims, Source Sans 3 (sans) for body, JetBrains Mono for metadata/badges.
 - All spacing on 8px grid. All interactive elements ≥ 44px touch target. All input fonts ≥ 16px (prevents iOS zoom).
+- Navigation: header links (`.header-nav`) at >640px, fixed bottom bar (`.bottom-nav`) at ≤640px. Breakpoint lives in `global.css`.
 - Use `100dvh` with `100vh` fallback for full-height layouts — never bare `100vh`.
 
 ### Testing
 
 - Unit tests live next to source files (`*.test.ts` / `*.test.tsx`).
 - Tests mock localStorage directly (not the storage service), so integration-style view tests exercise the real service layer.
+- Quiz randomness is injectable (`rng` option) — use a seeded RNG in unit tests; view tests mock `buildQuiz`.
 - Every utility function and hook has tests. All views and reusable components have interaction tests.
 
 ## Patterns to follow
