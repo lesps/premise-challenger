@@ -14,6 +14,13 @@ People with strong intuitive reasoning often arrive at conclusions quickly — b
    - What would change your mind? *(falsifiability)*
 4. **Decide** — confirm, revise, or suspend the proposition.
 
+## Logical fallacies
+
+A separate activity for learning to spot bad reasoning:
+
+- **Library** — 30 common fallacies grouped by category, each with a definition, an example, and why it fails. Filter by category or search.
+- **Quiz** — 10 multiple-choice scenarios per round, with feedback after each answer and a review of what you missed.
+
 No accounts. No cloud. Your data stays in your browser.
 
 ## Quick start

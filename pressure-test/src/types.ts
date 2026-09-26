@@ -37,3 +37,25 @@ export interface FilterOptions {
 export interface ExportOptions {
   filterStatus?: PropositionStatus | 'all';
 }
+
+export type FallacyCategory = 'relevance' | 'presumption' | 'causal' | 'ambiguity' | 'formal';
+
+export interface Fallacy {
+  id: string;
+  name: string;
+  aka: string[];
+  category: FallacyCategory;
+  definition: string;
+  example: string;
+  // Why the example's reasoning fails — shown with the example and as quiz feedback
+  flaw: string;
+  // Fresh scenarios used only by the quiz, so quiz items don't repeat the library example
+  quizScenarios: string[];
+}
+
+export interface QuizQuestion {
+  scenario: string;
+  answerId: string;
+  // Fallacy IDs, shuffled, always including answerId
+  optionIds: string[];
+}

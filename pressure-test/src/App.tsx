@@ -6,6 +6,8 @@ import { Triage } from './views/Triage';
 import { PressureTest } from './views/PressureTest';
 import { Outcome } from './views/Outcome';
 import { OpenQuestions } from './views/OpenQuestions';
+import { Fallacies } from './views/Fallacies';
+import { FallacyQuiz } from './views/FallacyQuiz';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/test/:id" element={<PressureTest />} />
         <Route path="/outcome/:id" element={<Outcome />} />
         <Route path="/open-questions" element={<OpenQuestions />} />
+        <Route path="/fallacies" element={<Fallacies />} />
+        <Route path="/fallacies/quiz" element={<FallacyQuiz />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
