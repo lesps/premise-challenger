@@ -40,6 +40,13 @@ npm run test:watch   # Watch mode
 npm run preview      # Serve production build locally
 ```
 
+## Deployment
+
+Live at **https://lesps.github.io/premise-challenger/**.
+
+- Every push to `main` runs tests, builds, and deploys to GitHub Pages (`.github/workflows/deploy.yml`). A failing test blocks the deploy.
+- Every pull request runs tests and a production build (`.github/workflows/ci.yml`).
+
 ## Tech
 
 React 18 · TypeScript · Vite · Vitest · React Router v6 · localStorage

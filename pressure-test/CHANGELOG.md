@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- CI workflow runs tests and build on every pull request.
+- Deployment and CI documented in `README.md` and `CLAUDE.md`.
+
+### Changed
+- GitHub Pages deploy now runs the test suite before building; failing tests block the deploy.
+
 ## [1.1.0] - 2026-09-26
 
 ### Added
