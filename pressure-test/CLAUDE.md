@@ -26,6 +26,12 @@ npm run test:watch   # Watch mode
 npm run preview      # Serve production build locally
 ```
 
+## CI / Deployment
+
+- `.github/workflows/ci.yml` — on pull requests: `npm ci`, `npm test`, `npm run build`.
+- `.github/workflows/deploy.yml` — on push to `main` (or manual dispatch): test, build, publish `pressure-test/dist` to GitHub Pages.
+- `vite.config.ts` sets `base: '/premise-challenger/'` to match the Pages URL. Change both together if the repo is renamed.
+
 ## Architecture
 
 ### Directory layout

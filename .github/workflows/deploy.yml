@@ -26,6 +26,8 @@ jobs:
           cache-dependency-path: pressure-test/package-lock.json
       - run: npm ci
         working-directory: pressure-test
+      - run: npm test
+        working-directory: pressure-test
       - run: npm run build
         working-directory: pressure-test
       - uses: actions/upload-pages-artifact@v3
